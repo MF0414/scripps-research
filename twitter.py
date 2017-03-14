@@ -27,5 +27,5 @@ if __name__ == '__main__':
 	stream = Stream(auth, listener)
 
 	#filer
-	stream.filter(track=['trump', 'mfgvsu414']) #, follow=)
+	stream.filter(track=['#anchorup', 'mfgvsu414']) #, follow=)
 

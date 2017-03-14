@@ -16,22 +16,17 @@ consumer_secret = "MRSHPhwEf30Y9pKkwIE7eYMuPk3bK6UqaaFCvVR5V8PBVeDvC6"
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-api = tweepy.API(auth)
+api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, retry_count=3, retry_delay=60)
 
+u = api.get_user(screen_name = 'GVSU')
+gloire = api.get_user(screen_name = 'GloireKnowsBest')
+GVSU_ID = u.id
+gloire_ID = gloire.id
+i = 0
 ids = []
-for page in tweepy.Cursor(api.followers_ids, id=339998952).pages():
-    #process followers
-    ids.extend(page)
+page = tweepy.Cursor(api.followers_ids, screen_name='@GVSU').pages()
 
-    #pause to avoid rate limit
-    time.sleep(20)
 
-print("User: 339998952\n") 
-print("Total Followers: " + str(len(ids)) + "\n")
-print(".........................................\n")
+friendship = api.show_friendship(target_id=GVSU_ID, source_id=gloire_ID)
 
-for i in range(20):
-   print(str(i) + ". Follower ID: " + str(ids[i]))
-   print("\nFriendship: " + str(api.show_friendship(target_id=339998952, source_id=int(ids[i]))))
-   print("............................../n")
-   print("\n")
+print(friendship[1])
