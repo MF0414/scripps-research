@@ -16,13 +16,17 @@ def export_followers(id_list):
    new_id = 0
    FILE = open('follower_ids.txt', "w")
    FILE.write("user,id\n")
-   for user in id_list[0]:
-      FILE.write(str(user))
-      line = "," + str(new_id)
-      FILE.write(line)
-      FILE.write('\n')
-      new_id = new_id + 1
+   for page in id_list:
+      for user in page:
+         FILE.write(str(user))
+         line = "," + str(new_id)
+         FILE.write(line)
+         FILE.write('\n')
+         print("Writing", new_id)
+         new_id = new_id + 1
    FILE.close()
+
+   print("IDS:", len(id_list))
 
 if __name__ == '__main__':
    
