@@ -1,0 +1,22 @@
+# Ensure we only read from the second line
+let num=1
+let offsetStart=0
+let offset=400
+cat modaccess.txt
+# Change the field separator
+IFS=$','
+while readline f
+    if $num -eq 1
+       let num=$(num+1)
+       ls
+    else
+       IFS=$','
+       set f                                                # Split the variables
+       IFS=$' '                                             # Set back the original separator
+       python3 listener.py $2 $3 $4 $5 $offset &            # Run the script as a separate process
+       # Recall the last offset before incrementing so that we can pass a beginning and end of offset
+       let offset=$offset + 400                             # Increment the number of users to process
+     fi
+done > testfile.txt
+    
+    

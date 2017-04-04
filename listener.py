@@ -9,20 +9,16 @@ import json
 import tweepy
 
 
-access_token = "249732925-re428beAJZeAwX9nmXfeFZvBrHilcYiRY5I07eps"
-access_token_secret = "uyjBmZIrwPAK9rASdf0A7mWlc2KO4TNZ1gPXOFBXd0dhY"
-consumer_key = "9gpbspr5k1qAeVs7sQpxLP3j7"
-consumer_secret = "ZRdssZQa2QkagUB6VMKXX76kLoV8GxBihyE6efCXU2JeIX2FnN"
+access_token = "249732925-"+sys.argv[1]
+access_token_secret = sys.argv[2]
+consumer_key = sys.argv[3]
+consumer_secret = sys.argv[4]
 
 class TweetListener(StreamListener):
 
 
     def on_data(self, data):
         #print(data)
-        #with open('MarchTweets.json', 'a') as m:
-            #json.dump(data, m)
-        #json_obj = tweetextract(data)
-        #json_obj.tweetextract(data)
         extract_tweet(data)
         return True
     #End of on_data
@@ -30,10 +26,6 @@ class TweetListener(StreamListener):
     def on_error(self, status):
         print(status)
     #End of on_error
-
-    def write(self, data):
-        pass
-    #End of write
 
 def extract_tweet(json_str):
 
@@ -106,6 +98,7 @@ if __name__ == '__main__':
     #api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, retry_count=3, retry_delay=60)
     #u = api.get_user(screen_name = 'GloireKnowsBest')
     #myID = str(u.id)
+    # Need to change the offset based on what was passed in by the bash script
     stream.filter(track=user_ids[:400])
     
    
