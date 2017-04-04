@@ -99,7 +99,7 @@ if __name__ == '__main__':
     #u = api.get_user(screen_name = 'GloireKnowsBest')
     #myID = str(u.id)
     # Need to change the offset based on what was passed in by the bash script
-    stream.filter(track=user_ids[:400])
+    stream.filter(track=user_ids[sys.argv[5]:sys.argv[6])
     
    
     
