@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Ensure we only read from the second line
+# Change the field separator
+new=','
+IFS=$new
+echo $new
+let num=1
+let offsetStart=0
+let offset=400
+
+while read f
+    # Simply increments for the next process
+    # Skipping the first line in access keys file
+    # The lines should still be displayed on the screen from cat
+    do
+       if [ $num -eq 1 ]
+          then
+            let num=$(num+1)
+            echo $num                                    
+       else
+          IFS=","
+          set f                                                # Split the variables
+          IFS=$' '                                             # Set back the original separator
+          temp=$offsetStart                                    # Set the temporary start
+          let offset=offset+1                                  # Accounts for exclusive array processing in python
+          echo $temp
+          echo $offset
+          python3 listener.py $2 $3 $4 $5 $temp $offset &      # Run the script as a separate process
+          offsetStart=offset				    # Change the id offset start for the next process
+          let offset=offset+400                                # Increment the number of users to process
+       fi
+done < testfile.txt
+    
+    
