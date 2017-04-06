@@ -9,16 +9,16 @@ import json
 import tweepy
 
 
-access_token = "249732925-"+sys.argv[1]
-access_token_secret = sys.argv[2]
-consumer_key = sys.argv[3]
-consumer_secret = sys.argv[4]
+access_token = "249732925-l8kriop5rrIoUXWNbh4IR0R66X812otzTMd5Nrir"
+access_token_secret = "KRL591uJTCa18SnMkmwnolke33kaV6ONdkG6AjLdljLZt"
+consumer_key = "22BDvpUNvakUygl8zemMAraxf"
+consumer_secret = "OEpcK7y593tb9t8VhN76Yhdkt1AsEjXQklpZ2XOZLNoY0VL3pR"
 
 class TweetListener(StreamListener):
 
 
     def on_data(self, data):
-        #print(data)
+        # print(data)
         extract_tweet(data)
         return True
     #End of on_data
@@ -75,13 +75,13 @@ if __name__ == '__main__':
     #Open the file containing the ids
     user_ids = []
 
-    with open("follower_ids.txt") as f:
+    with open("follower_screen_names.txt") as f:
        content = f.readlines()
        content = [x.strip() for x in content]
 
     for item in content:
         # Extract the actual user id
-        #print(item.split(',')[0])
+        print(item.split(',')[0])
         user_ids.append(item.split(',')[0])
 
     #This handles twitter auth and connection to streaming API
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     #u = api.get_user(screen_name = 'GloireKnowsBest')
     #myID = str(u.id)
     # Need to change the offset based on what was passed in by the bash script
-    stream.filter(track=user_ids[sys.argv[5]:sys.argv[6])
+    stream.filter(track=user_ids[:400])
     
    
     
