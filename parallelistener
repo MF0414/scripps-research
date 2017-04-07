@@ -2,9 +2,6 @@
 
 # Ensure we only read from the second line
 # Change the field separator
-new=','
-IFS=$new
-echo $new
 let num=1
 let offsetStart=0
 let offset=400
