@@ -6,13 +6,15 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 import json
+import sys
 import tweepy
 
 
-access_token = "249732925-l8kriop5rrIoUXWNbh4IR0R66X812otzTMd5Nrir"
-access_token_secret = "KRL591uJTCa18SnMkmwnolke33kaV6ONdkG6AjLdljLZt"
-consumer_key = "22BDvpUNvakUygl8zemMAraxf"
-consumer_secret = "OEpcK7y593tb9t8VhN76Yhdkt1AsEjXQklpZ2XOZLNoY0VL3pR"
+access_token = "249732925-"+str(sys.argv[0])
+access_token_secret = str(sys.argv[1])
+consumer_key = str(sys.argv[2])
+print("Token %s, token secret %s, consumer_key %s" % (access_token, access_token_secret, consumer_key))
+consumer_secret = str(sys.argv[3])
 
 class TweetListener(StreamListener):
 
@@ -81,7 +83,7 @@ if __name__ == '__main__':
 
     for item in content:
         # Extract the actual user id
-        print(item.split(',')[0])
+        #print(item.split(',')[0])
         user_ids.append(item.split(',')[0])
 
     #This handles twitter auth and connection to streaming API
@@ -99,7 +101,12 @@ if __name__ == '__main__':
     #u = api.get_user(screen_name = 'GloireKnowsBest')
     #myID = str(u.id)
     # Need to change the offset based on what was passed in by the bash script
-    stream.filter(track=user_ids[:400])
+    offsetStart = int(sys.argv[4])
+    print ("Starting at %d" % offsetStart)
+    offsetEnd = int(sys.argv[5])
+    print ("Ending at %d " % offsetEnd)
+    
+    stream.filter(track=user_ids[(int(sys.argv[4])):(int(sys.argv[5]))])
     
    
     
