@@ -1,3 +1,5 @@
+#!/usr/bin/python3.4
+
 # Listens for tweets from GVSU followers
 #@authors Gloire Rubambiza, Michael Foster
 #@version 03/22/2017
@@ -9,12 +11,18 @@ import json
 import sys
 import tweepy
 
-
-access_token = "249732925-"+str(sys.argv[0])
-access_token_secret = str(sys.argv[1])
-consumer_key = str(sys.argv[2])
-print("Token %s, token secret %s, consumer_key %s" % (access_token, access_token_secret, consumer_key))
-consumer_secret = str(sys.argv[3])
+print("sys arg0" ,sys.argv[0])
+print("sys arg1 ", sys.argv[1])
+access_token = "249732925-"+str(sys.argv[1])
+print(access_token)
+access_token_secret = str(sys.argv[2])
+print(access_token_secret)
+consumer_key = str(sys.argv[3])
+print("%s %s" % (sys.argv[5], sys.argv[6]))
+#print("Token %s, token secret %s, consumer_key %s" + 
+      #"offset %d, offsetend %d" % (access_token, access_token_secret, consumer_key, int(sys.argv[5]), int(sys.argv[6])))
+consumer_secret = str(sys.argv[4])
+print(consumer_secret)
 
 class TweetListener(StreamListener):
 
@@ -27,6 +35,7 @@ class TweetListener(StreamListener):
 
     def on_error(self, status):
         print(status)
+        exit(2)
     #End of on_error
 
 def extract_tweet(json_str):
@@ -101,12 +110,14 @@ if __name__ == '__main__':
     #u = api.get_user(screen_name = 'GloireKnowsBest')
     #myID = str(u.id)
     # Need to change the offset based on what was passed in by the bash script
-    offsetStart = int(sys.argv[4])
-    print ("Starting at %d" % offsetStart)
-    offsetEnd = int(sys.argv[5])
-    print ("Ending at %d " % offsetEnd)
+    offsetStart = int(sys.argv[5])
+    offsetEnd = int(sys.argv[6])
+    print(offsetStart)
+    print(offsetEnd)
     
-    stream.filter(track=user_ids[(int(sys.argv[4])):(int(sys.argv[5]))])
+    #for user in range (offsetStart,offsetEnd):
+        #print("Processing this user %s" % user_ids[user])
+    #stream.filter(track=user_ids[offsetStart:offsetEnd])
     
    
     

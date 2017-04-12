@@ -1,36 +1,48 @@
 #!/bin/bash
 
-# Ensure we only read from the second line
-# Change the field separator
-let num=1
+# Global variables declarations
+a_token="Sometoken"
+a_token_s="Somesecret"
+c_key="Somekey"
+c_key_s="Someksecret"
+let counter=1
+let num=1                				     # Keeps track of which key is being processed
 let offsetStart=0
-let offset=400
+let offset=300
 
-while [ $offset -lt 4800 ]
+while [ $offset -lt 3600 ]
 do
    while read f
-      # Simply increments for the next process
-      # Skipping the first line in access keys file
-      # The lines should still be displayed on the screen from cat
    do
-     if [ $num -eq 1 ]
+     if [ $counter -eq 1 ]
         then
-          let num=$num+1
-          echo $num                                    
-     else
-          let temp=$offsetStart                                # Set the temporary start
-          let offset=offset+1                                  # Accounts for exclusive array processing in python
-          #set $f					       # Split the variables
-          line=$f
-          set $line
-          echo $1
-          echo $2                                             
-          python3 listener.py $2 $3 $4 $5 $temp $offset &      # Run the script as a separate process
-          let offsetStart=offset			       # Change the id offset start for the next process
-          let offset=offset+400                                # Increment the number of users to process
-          echo "The new offsets are $offsetStart $offset"
-       fi
-    done < redirect.txt      # Extract only the token keys
+           a_token=$f
+           let counter=counter+1
+     elif [ $counter -eq 2 ]
+        then
+           a_token_s=$f
+           let counter=counter+1
+     elif [ $counter -eq 3 ]
+         then
+           c_key=$f
+           let counter=counter+1
+     elif [ $counter -eq 4 ]
+         then
+           c_key_s=$f
+           let counter=1                                                                # Restart the counter back to 1
+           let temp=$offsetStart                                                        # Set the temporary start
+           #let offset=offset+1                                                          # Accounts for exclusive array processing in python
+           ./listener.py $a_token $a_token_s $c_key $c_key_s $temp $offset &      # Run the script as a separate process
+           echo "Starting process with offsets $temp and $offset"
+           let offsetStart=offset			                                # Change the id offset start for the next process
+           let offset=offset+300                                                        # Increment the number of users to process
+           if [ $offset -gt 3600 ]
+             then
+                 exit 0
+           fi
+           echo "The new offsets are $offsetStart $offset"
+     fi
+     done < redirect.txt      # Extract only the token keys
 done
 
 
