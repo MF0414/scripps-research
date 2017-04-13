@@ -11,21 +11,12 @@ import json
 import sys
 import tweepy
 
-print("sys arg0" ,sys.argv[0])
-print("sys arg1 ", sys.argv[1])
 access_token = "249732925-"+str(sys.argv[1])
-print(access_token)
 access_token_secret = str(sys.argv[2])
-print(access_token_secret)
 consumer_key = str(sys.argv[3])
-print("%s %s" % (sys.argv[5], sys.argv[6]))
-#print("Token %s, token secret %s, consumer_key %s" + 
-      #"offset %d, offsetend %d" % (access_token, access_token_secret, consumer_key, int(sys.argv[5]), int(sys.argv[6])))
 consumer_secret = str(sys.argv[4])
-print(consumer_secret)
 
 class TweetListener(StreamListener):
-
 
     def on_data(self, data):
         # print(data)
@@ -77,8 +68,12 @@ def extract_tweet(json_str):
 		   "tweet":tweet_object
 		   }
     print("\n\n" + str(tweet_summary) + "\n\n")
-    with open('ModMarchTweets.json', 'a') as m:
+    batch_file = "April_TB_"+str(sys.argv[5])+"_"+str(sys.argv[6])+".json"
+    print("\n About to write to file named %s \n" % batch_file)
+    with open(batch_file, 'a') as m:
         json.dump(tweet_summary, m)
+        m.write(",\n\n")
+    m.close()
 #End of extract
 
 if __name__ == '__main__':
@@ -91,9 +86,11 @@ if __name__ == '__main__':
        content = [x.strip() for x in content]
 
     for item in content:
-        # Extract the actual user id
-        #print(item.split(',')[0])
-        user_ids.append(item.split(',')[0])
+       # Extract the actual user id and take out noise
+       current_user = item.split(',')[0]
+       if current_user != "USER UNAVAILABLE" and current_user != "Moreno" and current_user != "verified":
+          user_ids.append(current_user)
+        
 
     #This handles twitter auth and connection to streaming API
     listener = TweetListener()
@@ -104,20 +101,10 @@ if __name__ == '__main__':
     #Look into handling time outs and rate limits on the streaming
     stream = Stream(auth, listener)
 
-
-    #Filter to listen for the first GVSU followers
-    #api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, retry_count=3, retry_delay=60)
-    #u = api.get_user(screen_name = 'GloireKnowsBest')
-    #myID = str(u.id)
     # Need to change the offset based on what was passed in by the bash script
     offsetStart = int(sys.argv[5])
     offsetEnd = int(sys.argv[6])
-    print(offsetStart)
-    print(offsetEnd)
-    
-    #for user in range (offsetStart,offsetEnd):
-        #print("Processing this user %s" % user_ids[user])
-    #stream.filter(track=user_ids[offsetStart:offsetEnd])
+    stream.filter(track=user_ids[offsetStart:offsetEnd])
     
    
     

@@ -8,9 +8,9 @@ c_key_s="Someksecret"
 let counter=1
 let num=1                				     # Keeps track of which key is being processed
 let offsetStart=0
-let offset=300
+let offset=400
 
-while [ $offset -lt 3600 ]
+while [ $offset -lt 7200 ]
 do
    while read f
    do
@@ -31,12 +31,13 @@ do
            c_key_s=$f
            let counter=1                                                                # Restart the counter back to 1
            let temp=$offsetStart                                                        # Set the temporary start
-           #let offset=offset+1                                                          # Accounts for exclusive array processing in python
-           ./listener.py $a_token $a_token_s $c_key $c_key_s $temp $offset &      # Run the script as a separate process
+           #let offset=offset+1
+           touch "April_TB_"$temp"_"$offset".json"
+           ./listener.py $a_token $a_token_s $c_key $c_key_s $temp $offset &            # Run the script as a separate process
            echo "Starting process with offsets $temp and $offset"
            let offsetStart=offset			                                # Change the id offset start for the next process
-           let offset=offset+300                                                        # Increment the number of users to process
-           if [ $offset -gt 3600 ]
+           let offset=offset+400                                                        # Increment the number of users to process
+           if [ $offset -gt 7200 ]
              then
                  exit 0
            fi
