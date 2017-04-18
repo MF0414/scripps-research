@@ -88,7 +88,7 @@ if __name__ == '__main__':
     for item in content:
        # Extract the actual user id and take out noise
        current_user = item.split(',')[0]
-       if current_user != "USER UNAVAILABLE" and current_user != "Moreno" and current_user != "verified":
+       if current_user != "USER UNAVAILABLE" and current_user != "Moreno" and current_user != "verified" and current_user != "6BillionPeople":
           user_ids.append(current_user)
         
 

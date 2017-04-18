@@ -10,6 +10,8 @@ let num=1                				     # Keeps track of which key is being processed
 let offsetStart=0
 let offset=400
 
+while [ $offset -lt 10800 ]
+do
    while read f
    do
      if [ $counter -eq 1 ]
@@ -43,7 +45,8 @@ let offset=400
            fi
            echo "The new offsets are $offsetStart $offset"
      fi
-     done < newredirect.txt      # Extract only the token keys
+     done < redirect.txt      # Extract only the token keys
+done
 
 
     
