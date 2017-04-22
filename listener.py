@@ -11,10 +11,10 @@ import json
 import sys
 import tweepy
 
-access_token = "249732925-"+str(sys.argv[1])
-access_token_secret = str(sys.argv[2])
-consumer_key = str(sys.argv[3])
-consumer_secret = str(sys.argv[4])
+access_token = str(sys.argv[1])+"-"+str(sys.argv[2])
+access_token_secret = str(sys.argv[3])
+consumer_key = str(sys.argv[4])
+consumer_secret = str(sys.argv[5])
 
 class TweetListener(StreamListener):
 
@@ -68,7 +68,7 @@ def extract_tweet(json_str):
 		   "tweet":tweet_object
 		   }
     print("\n\n" + str(tweet_summary) + "\n\n")
-    batch_file = "April_TB_"+str(sys.argv[5])+"_"+str(sys.argv[6])+".json"
+    batch_file = "April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json"
     print("\n About to write to file named %s \n" % batch_file)
     with open(batch_file, 'a') as m:
         json.dump(tweet_summary, m)
@@ -102,8 +102,8 @@ if __name__ == '__main__':
     stream = Stream(auth, listener)
 
     # Need to change the offset based on what was passed in by the bash script
-    offsetStart = int(sys.argv[5])
-    offsetEnd = int(sys.argv[6])
+    offsetStart = int(sys.argv[6])
+    offsetEnd = int(sys.argv[7])
     stream.filter(track=user_ids[offsetStart:offsetEnd])
     
    

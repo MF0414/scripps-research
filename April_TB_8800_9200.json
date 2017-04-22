@@ -14,3 +14,5 @@
 
 {"tweet": {"tweet_id": "854153973791633408", "followers": 657, "created_at": "Tue Apr 18 02:05:51 +0000 2017", "is_retweet": false, "tweet": "@Kenzie7Barch \ud83d\udc93\ud83d\udc93", "location": "uais '17\u27a1\ufe0fwsu meddirect", "friends": 408, "user_name": "shirleyelfishie"}, "user_id_str": "2938949463"},
 
+{"user_id_str": "396929058", "tweet": {"is_retweet": true, "followers": 382, "friends": 619, "location": "global", "tweet": "@amandamstinger https://t.co/qGS1GT5ppD", "created_at": "Wed Apr 19 13:25:08 +0000 2017", "tweet_id": "854687309740089344", "user_name": "EllieLynnHoch"}},
+
