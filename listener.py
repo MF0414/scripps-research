@@ -35,7 +35,7 @@ def extract_tweet(json_str):
     json_dict = json.loads(json_str)
     user_id_str = json_dict['user']['id_str']
     tweet_time = json_dict['created_at']
-    #tweet = json_dict['text'] #extract the tweet
+    tweet = json_dict['text'] #extract the tweet
     retweet_status = json_dict['is_quote_status']
     tweet_id_str = json_dict['id_str']
     location = ""
@@ -50,8 +50,7 @@ def extract_tweet(json_str):
     user_name = json_dict['user']['screen_name']
 
     #tried extracting full tweet, still getting the keys wrong
-    #tweet = json_dict['entities']['extended_text']['full_text']
-    tweet = json_dict['user']['extended_tweet']['full_text']
+    #tweet = json_dict['user']['extended_tweet']['full_text']
 
     tweet_object = {
 		    "tweet_id": tweet_id_str,
