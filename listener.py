@@ -34,8 +34,8 @@ def extract_tweet(json_str):
     #extracting tweet and user information
     json_dict = json.loads(json_str)
     user_id_str = json_dict['user']['id_str']
-    tweet_time = json_dict['created_at'] 
-    tweet = json_dict['text'] #extract the tweet
+    tweet_time = json_dict['created_at']
+    #tweet = json_dict['text'] #extract the tweet
     retweet_status = json_dict['is_quote_status']
     tweet_id_str = json_dict['id_str']
     location = ""
@@ -51,20 +51,21 @@ def extract_tweet(json_str):
 
     #tried extracting full tweet, still getting the keys wrong
     #tweet = json_dict['entities']['extended_text']['full_text']
+    tweet = json_dict['user']['extended_tweet']['full_text']
 
     tweet_object = {
 		    "tweet_id": tweet_id_str,
 		    "created_at": tweet_time,
 		    "location": location,
-                    "tweet": tweet, 
-             	    "followers":followers, 
+                    "tweet": tweet,
+             	    "followers":followers,
 	            "friends": friends,
                     "user_name": user_name,
 		     "is_retweet": retweet_status
                     }
 
     tweet_summary = {
-		   "user_id_str" : user_id_str, 
+		   "user_id_str" : user_id_str,
 		   "tweet":tweet_object
 		   }
     print("\n\n" + str(tweet_summary) + "\n\n")
@@ -90,7 +91,7 @@ if __name__ == '__main__':
        current_user = item.split(',')[0]
        if current_user != "USER UNAVAILABLE" and current_user != "Moreno" and current_user != "verified" and current_user != "6BillionPeople":
           user_ids.append(current_user)
-        
+
 
     #This handles twitter auth and connection to streaming API
     listener = TweetListener()
@@ -105,6 +106,3 @@ if __name__ == '__main__':
     offsetStart = int(sys.argv[6])
     offsetEnd = int(sys.argv[7])
     stream.filter(track=user_ids[offsetStart:offsetEnd])
-    
-   
-    
