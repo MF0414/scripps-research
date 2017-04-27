@@ -7,6 +7,7 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+from pathlib import Path
 import json
 import sys
 import tweepy
@@ -19,7 +20,6 @@ consumer_secret = str(sys.argv[5])
 class TweetListener(StreamListener):
 
     def on_data(self, data):
-        # print(data)
         extract_tweet(data)
         return True
     #End of on_data
@@ -65,12 +65,12 @@ def extract_tweet(json_str):
 
     tweet_summary = {
 		   "user_id_str" : user_id_str,
-		   "tweet":tweet_object
+		   "tweet_summary":tweet_object
 		   }
     print("\n\n" + str(tweet_summary) + "\n\n")
-    batch_file = "April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json"
-    print("\n About to write to file named %s \n" % batch_file)
-    with open(batch_file, 'a') as m:
+    file_path = Path("Data/"+"April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json").resolve()
+    print("\n New tweet processed! Sending to batch file %s \n" % file_path)
+    with open(file_path, 'a') as m:
         json.dump(tweet_summary, m)
         m.write(",\n\n")
     m.close()

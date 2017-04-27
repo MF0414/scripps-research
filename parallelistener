@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cut -d, -f1-5 --output-delimiter=$'\n' modaccess.txt > newredirect.txt
+cut -d, -f1-5 --output-delimiter=$'\n' FullAccess.txt > newredirect.txt
 # Global variables declarations
 usr_ID="SomeID"
 a_token="Sometoken"
@@ -35,15 +35,16 @@ do
         c_key_s=$f
         let counter=1                                                                # Restart the counter back to 1
         let temp=$offsetStart                                                        # Set the temporary start
+        cd Data
         if ! test -f "April_TB_"$temp"_"$offset".json"
            then
                touch "April_TB_"$temp"_"$offset".json"
         fi
+        cd ..
         ./listener.py $usr_ID $a_token $a_token_s $c_key $c_key_s $temp $offset &     # Run the script as a separate process
-        echo "Starting process with offsets $temp and $offset"
+        echo "Starting listening process for users $temp through $offset"
         let offsetStart=offset			                                # Change the id offset start for the next process
         let offset=offset+400                                                        # Increment the number of users to process
-        echo "The new offsets are $offsetStart $offset"
   fi
 done < newredirect.txt      # Extract only the token keys
 
