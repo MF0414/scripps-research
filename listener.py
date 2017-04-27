@@ -1,8 +1,8 @@
 #!/usr/bin/python3.4
 
 # Listens for tweets from GVSU followers
-#@authors Gloire Rubambiza, Michael Foster
-#@version 03/22/2017
+# @authors Gloire Rubambiza, Michael Foster
+# @version 04/27/2017
 
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
@@ -19,7 +19,6 @@ consumer_secret = str(sys.argv[5])
 class TweetListener(StreamListener):
 
     def on_data(self, data):
-        # print(data)
         extract_tweet(data)
         return True
     #End of on_data
@@ -35,7 +34,7 @@ def extract_tweet(json_str):
     json_dict = json.loads(json_str)
     user_id_str = json_dict['user']['id_str']
     tweet_time = json_dict['created_at']
-    #tweet = json_dict['text'] #extract the tweet
+    tweet = json_dict['text'] #extract the tweet
     retweet_status = json_dict['is_quote_status']
     tweet_id_str = json_dict['id_str']
     location = ""
@@ -50,8 +49,7 @@ def extract_tweet(json_str):
     user_name = json_dict['user']['screen_name']
 
     #tried extracting full tweet, still getting the keys wrong
-    #tweet = json_dict['entities']['extended_text']['full_text']
-    tweet = json_dict['user']['extended_tweet']['full_text']
+    #tweet = json_dict['user']['extended_tweet']['full_text']
 
     tweet_object = {
 		    "tweet_id": tweet_id_str,
@@ -66,11 +64,12 @@ def extract_tweet(json_str):
 
     tweet_summary = {
 		   "user_id_str" : user_id_str,
-		   "tweet":tweet_object
+		   "tweet_summary":tweet_object
 		   }
+    
     print("\n\n" + str(tweet_summary) + "\n\n")
-    batch_file = "April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json"
-    print("\n About to write to file named %s \n" % batch_file)
+    batch_file = "Data/"+"April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json"
+    print("\n New tweet processed! Sending to batch file %s \n" % batch_file)
     with open(batch_file, 'a') as m:
         json.dump(tweet_summary, m)
         m.write(",\n\n")
@@ -81,13 +80,12 @@ if __name__ == '__main__':
 
     #Open the file containing the ids
     user_ids = []
-
     with open("follower_screen_names.txt") as f:
        content = f.readlines()
        content = [x.strip() for x in content]
 
     for item in content:
-       # Extract the actual user id and take out noise
+       # Extract the user id and take out noise i.e users with private settings or celebrities/businesses
        current_user = item.split(',')[0]
        if current_user != "USER UNAVAILABLE" and current_user != "Moreno" and current_user != "verified" and current_user != "6BillionPeople":
           user_ids.append(current_user)
@@ -102,7 +100,7 @@ if __name__ == '__main__':
     #Look into handling time outs and rate limits on the streaming
     stream = Stream(auth, listener)
 
-    # Need to change the offset based on what was passed in by the bash script
+    # Offset determines which next 400 users to process based on bash script parameters passed in
     offsetStart = int(sys.argv[6])
     offsetEnd = int(sys.argv[7])
     stream.filter(track=user_ids[offsetStart:offsetEnd])
