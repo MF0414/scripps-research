@@ -1,13 +1,12 @@
 #!/usr/bin/python3.4
 
 # Listens for tweets from GVSU followers
-#@authors Gloire Rubambiza, Michael Foster
-#@version 03/22/2017
+# @authors Gloire Rubambiza, Michael Foster
+# @version 04/27/2017
 
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-from pathlib import Path
 import json
 import sys
 import tweepy
@@ -67,10 +66,11 @@ def extract_tweet(json_str):
 		   "user_id_str" : user_id_str,
 		   "tweet_summary":tweet_object
 		   }
+    
     print("\n\n" + str(tweet_summary) + "\n\n")
-    file_path = Path("Data/"+"April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json").resolve()
-    print("\n New tweet processed! Sending to batch file %s \n" % file_path)
-    with open(file_path, 'a') as m:
+    batch_file = "Data/"+"April_TB_"+str(sys.argv[6])+"_"+str(sys.argv[7])+".json"
+    print("\n New tweet processed! Sending to batch file %s \n" % batch_file)
+    with open(batch_file, 'a') as m:
         json.dump(tweet_summary, m)
         m.write(",\n\n")
     m.close()
@@ -80,13 +80,12 @@ if __name__ == '__main__':
 
     #Open the file containing the ids
     user_ids = []
-
     with open("follower_screen_names.txt") as f:
        content = f.readlines()
        content = [x.strip() for x in content]
 
     for item in content:
-       # Extract the actual user id and take out noise
+       # Extract the user id and take out noise i.e users with private settings or celebrities/businesses
        current_user = item.split(',')[0]
        if current_user != "USER UNAVAILABLE" and current_user != "Moreno" and current_user != "verified" and current_user != "6BillionPeople":
           user_ids.append(current_user)
@@ -101,7 +100,7 @@ if __name__ == '__main__':
     #Look into handling time outs and rate limits on the streaming
     stream = Stream(auth, listener)
 
-    # Need to change the offset based on what was passed in by the bash script
+    # Offset determines which next 400 users to process based on bash script parameters passed in
     offsetStart = int(sys.argv[6])
     offsetEnd = int(sys.argv[7])
     stream.filter(track=user_ids[offsetStart:offsetEnd])

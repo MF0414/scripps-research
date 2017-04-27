@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# Remove the comma delimeters in the file and send all the fields to a new line
 cut -d, -f1-5 --output-delimiter=$'\n' FullAccess.txt > newredirect.txt
+
 # Global variables declarations
 usr_ID="SomeID"
 a_token="Sometoken"
@@ -8,7 +10,6 @@ a_token_s="Somesecret"
 c_key="Somekey"
 c_key_s="Someksecret"
 let counter=1
-let num=1                				     # Keeps track of which key is being processed
 let offsetStart=0
 let offset=400
 
@@ -16,37 +17,52 @@ while read f
 do
   if [ $counter -eq 1 ]
      then
-        usr_ID=$f
-        let counter=counter+1
+        # Extract the user ID aka the app creator's ID
+        usr_ID=$f								     
+        let counter=counter+1								
   elif [ $counter -eq 2 ]
      then
-        a_token=$f
+        # Extract the access token
+        a_token=$f								     
         let counter=counter+1
   elif [ $counter -eq 3 ]
-     then
+     then 
+        # Extract the access token secret
         a_token_s=$f
-        let counter=counter+1
+        let counter=counter+1         						     
   elif [ $counter -eq 4 ]
       then
+        # Extract the consumer key
         c_key=$f
-        let counter=counter+1
+        let counter=counter+1                                                        
   elif [ $counter -eq 5 ]
-      then
-        c_key_s=$f
-        let counter=1                                                                # Restart the counter back to 1
-        let temp=$offsetStart                                                        # Set the temporary start
-        cd Data
+      then 
+        # Extract the cosumer secret
+        c_key_s=$f								     
+        
+        # Restart the counter back to 1
+        let counter=1
+
+        # Set the temporary start                                                                
+        let temp=$offsetStart                                                        
+        
+        # Create the file in separate directory to avoid clutter
+        cd Data									     
         if ! test -f "April_TB_"$temp"_"$offset".json"
            then
                touch "April_TB_"$temp"_"$offset".json"
         fi
+        # Return to previous directory before running process
         cd ..
-        ./listener.py $usr_ID $a_token $a_token_s $c_key $c_key_s $temp $offset &     # Run the script as a separate process
+        # Run the script as a separate process									     
+        ./listener.py $usr_ID $a_token $a_token_s $c_key $c_key_s $temp $offset &    
         echo "Starting listening process for users $temp through $offset"
-        let offsetStart=offset			                                # Change the id offset start for the next process
-        let offset=offset+400                                                        # Increment the number of users to process
+        # Change the id offset start for the next process
+        let offsetStart=offset			                                     
+         # Increment the number of users to process
+        let offset=offset+400                                                       
   fi
-done < newredirect.txt      # Extract only the token keys
+done < newredirect.txt    							     # Extract the user ID and token/access keys
 
 
     
