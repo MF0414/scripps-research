@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Remove the comma delimeters in the file and send all the fields to a new line
-cut -d, -f1-5 --output-delimiter=$'\n' FullAccess.txt > newredirect.txt
-
 # Global variables declarations
 usr_ID="SomeID"
 a_token="Sometoken"
