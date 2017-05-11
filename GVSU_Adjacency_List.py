@@ -1,30 +1,12 @@
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
-from tweepy import Stream
-import tweepy
-import time
 import json
+import codecs
 
 
-def extract_friendship(friend_object):
-   if "followed_by=True" in str(friend_object[1]):
-      return True
-   else:
-      return False
 
 
 if __name__ == '__main__':
 
-#API Setup
-   access_token = "1666122888-uSWuz7YnSKiLmnBZ0ccglCColQJzufxaMhAPSU4"
-   access_token_secret = "37eLiYE2Zv1KJ386ZSHWZhXSyTpqtyfDKAtzxcklnJjui"
-   consumer_key = "cekJqEoqofOPKs3R5jVegGNlJ"
-   consumer_secret = "MRSHPhwEf30Y9pKkwIE7eYMuPk3bK6UqaaFCvVR5V8PBVeDvC6"
 
-   auth = OAuthHandler(consumer_key, consumer_secret )
-   auth.set_access_token(access_token, access_token_secret)
-
-   api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, retry_count=3, retry_delay=60)
 
 #ID Extraction
    id_tuples = []
@@ -40,23 +22,35 @@ if __name__ == '__main__':
     
    id_tuples.remove(["user","id"]) #Remove header
    n = len(id_tuples)
-   network = {}
+   followers = []
+   new_net = {}
    
-   for i in range(n - 1):
-      target = int(id_tuples[i][0])
-      target_mapped = int(id_tuples[i][1])
-      for j in range(n):
-         source = int(id_tuples[j][0])
-         source_mapped = int(id_tuples[j][1])
-         followers = []
-         print("Fetching " + str(target_mapped) + " , " + str(source_mapped)) 
-         if extract_friendship(api.show_friendship(target_id=target, source_id=source)):
-            followers.append(source_mapped)
-      network[target_mapped] = followers
+   for item in id_tuples:
+      followers.append(item[0])
+      
 
+   files = ['A1','A','B','C','D','E','F','G','H','I','J','L']
 #Store Network Adjacency Dictionary into File
-   print("Sending Network to File")
+
+   for f in files:
+      print("Getting Dictionary " + f + '\n')
+      input_file = file(f+'.json','r')
+      network = json.loads(input_file.read().decode('utf-8-sig'))
+      for user in network:
+         #print("next user")
+         temp = []
+         for follower in network[user]:
+            if str(follower) in followers:
+               temp.append(follower)
+         new_net[user] = temp
+         
+
    with open('GVSU_Twitter_Network.json','w') as o:
-      json.dump(dictionary,o)
+      json.dump(new_net,o)
+
+   
+
+   
+
 
    
